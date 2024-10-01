@@ -1,0 +1,52 @@
+﻿@page "/attributedetailmultiples"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using StrategyMack.Models
+@using StrategyMack.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="attributedetailmultiples/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.AttributeDetailMultiple">
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.District" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.Year" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.JanuaryValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.FebruaryValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.MarchValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.AprilValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.MayValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.JuneValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.JulyValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.AugustValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.SeptemberValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.OctoberValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.NovemberValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.DecemberValue" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.Created" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.Modified" />
+    <PropertyColumn Property="attributedetailmultiple => attributedetailmultiple.InitiativeAttributeId" />
+
+    <TemplateColumn Context="attributedetailmultiple">
+        <a href="@($"attributedetailmultiples/edit?id={attributedetailmultiple.Id}")">Edit</a> |
+        <a href="@($"attributedetailmultiples/details?id={attributedetailmultiple.Id}")">Details</a> |
+        <a href="@($"attributedetailmultiples/delete?id={attributedetailmultiple.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private StrategyMackContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

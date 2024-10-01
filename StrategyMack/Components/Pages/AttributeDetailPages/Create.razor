@@ -1,0 +1,55 @@
+﻿@page "/attributedetails/create"
+@using Microsoft.EntityFrameworkCore
+@using StrategyMack.Models
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>AttributeDetail</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="AttributeDetail" OnValidSubmit="AddAttributeDetail" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />  
+     
+            <div class="mb-3">
+                <label for="detail" class="form-label">Detail:</label> 
+                <InputText id="detail" @bind-Value="AttributeDetail.Detail" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetail.Detail" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="created" class="form-label">Created:</label> 
+                <InputDate id="created" @bind-Value="AttributeDetail.Created" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetail.Created" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="modified" class="form-label">Modified:</label> 
+                <InputDate id="modified" @bind-Value="AttributeDetail.Modified" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetail.Modified" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/attributedetails">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private AttributeDetail AttributeDetail { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddAttributeDetail()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.AttributeDetail.Add(AttributeDetail);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/attributedetails");
+    }
+}

@@ -1,0 +1,59 @@
+﻿@page "/initiativeattributes/create"
+@using Microsoft.EntityFrameworkCore
+@using StrategyMack.Models
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>InitiativeAttribute</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="InitiativeAttribute" OnValidSubmit="AddInitiativeAttribute" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label> 
+                <InputText id="title" @bind-Value="InitiativeAttribute.Title" class="form-control" /> 
+                <ValidationMessage For="() => InitiativeAttribute.Title" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label> 
+                <InputText id="description" @bind-Value="InitiativeAttribute.Description" class="form-control" /> 
+                <ValidationMessage For="() => InitiativeAttribute.Description" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="hasmultipledetails" class="form-label">HasMultipleDetails:</label> 
+                <InputCheckbox id="hasmultipledetails" @bind-Value="InitiativeAttribute.HasMultipleDetails" class="form-check-input" /> 
+                <ValidationMessage For="() => InitiativeAttribute.HasMultipleDetails" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="isactive" class="form-label">IsActive:</label> 
+                <InputCheckbox id="isactive" @bind-Value="InitiativeAttribute.IsActive" class="form-check-input" /> 
+                <ValidationMessage For="() => InitiativeAttribute.IsActive" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/initiativeattributes">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private InitiativeAttribute InitiativeAttribute { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddInitiativeAttribute()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.InitiativeAttribute.Add(InitiativeAttribute);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/initiativeattributes");
+    }
+}

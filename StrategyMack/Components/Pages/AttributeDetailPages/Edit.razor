@@ -1,0 +1,99 @@
+﻿@page "/attributedetails/edit"
+@using Microsoft.EntityFrameworkCore
+@using StrategyMack.Models
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>AttributeDetail</h2>
+<hr />
+@if (AttributeDetail is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="AttributeDetail" OnValidSubmit="UpdateAttributeDetail" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="AttributeDetail.Id" value="@AttributeDetail.Id" />
+                <div class="mb-3">
+                    <label for="detail" class="form-label">Detail:</label>
+                    <InputText id="detail" @bind-Value="AttributeDetail.Detail" class="form-control" />
+                    <ValidationMessage For="() => AttributeDetail.Detail" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="created" class="form-label">Created:</label>
+                    <InputDate id="created" @bind-Value="AttributeDetail.Created" class="form-control" />
+                    <ValidationMessage For="() => AttributeDetail.Created" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="modified" class="form-label">Modified:</label>
+                    <InputDate id="modified" @bind-Value="AttributeDetail.Modified" class="form-control" />
+                    <ValidationMessage For="() => AttributeDetail.Modified" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/attributedetails">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private AttributeDetail? AttributeDetail { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        AttributeDetail ??= await context.AttributeDetail.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (AttributeDetail is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateAttributeDetail()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(AttributeDetail!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!AttributeDetailExists(AttributeDetail!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/attributedetails");
+    }
+
+    private bool AttributeDetailExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.AttributeDetail.Any(e => e.Id == id);
+    }
+}

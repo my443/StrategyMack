@@ -1,0 +1,39 @@
+﻿@page "/initiativeattributes"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using StrategyMack.Models
+@using StrategyMack.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="initiativeattributes/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.InitiativeAttribute">
+    <PropertyColumn Property="initiativeattribute => initiativeattribute.Title" />
+    <PropertyColumn Property="initiativeattribute => initiativeattribute.Description" />
+    <PropertyColumn Property="initiativeattribute => initiativeattribute.HasMultipleDetails" />
+    <PropertyColumn Property="initiativeattribute => initiativeattribute.IsActive" />
+
+    <TemplateColumn Context="initiativeattribute">
+        <a href="@($"initiativeattributes/edit?id={initiativeattribute.Id}")">Edit</a> |
+        <a href="@($"initiativeattributes/details?id={initiativeattribute.Id}")">Details</a> |
+        <a href="@($"initiativeattributes/delete?id={initiativeattribute.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private StrategyMackContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

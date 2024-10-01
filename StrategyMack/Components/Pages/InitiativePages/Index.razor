@@ -1,0 +1,100 @@
+﻿@page "/initiatives"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using StrategyMack.Models
+@using StrategyMack.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="initiatives/create">Create New</a>
+</p>
+
+<button class="btn btn-primary" @onclick="UpdateAllAttributes">Click Me</button>
+
+<QuickGrid Class="table" Items="context.Initiative">
+    <PropertyColumn Property="initiative => initiative.Title" />
+    <PropertyColumn Property="initiative => initiative.Description" />
+    <PropertyColumn Property="initiative => initiative.StartDate" />
+    <PropertyColumn Property="initiative => initiative.EndDate" />
+    <PropertyColumn Property="initiative => initiative.IsActive" />
+
+    <TemplateColumn Context="initiative">
+        <a href="@($"initiatives/edit?id={initiative.Id}")">Edit</a> |
+        <a href="@($"initiatives/details?id={initiative.Id}")">Details</a> |
+        <a href="@($"initiatives/delete?id={initiative.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private StrategyMackContext context = default!;
+
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext(); 
+    }
+
+    private async Task LogToConsole()
+    {
+        await JS.InvokeVoidAsync("console.log", "Hello from Blazor!");
+    }
+
+    private void UpdateAllAttributes()
+    {
+        List<Initiative> initiatives = context.Initiative.ToList();
+        List<InitiativeAttribute> attributes = context.InitiativeAttribute.ToList();
+
+        foreach(Initiative initiative in initiatives)
+        {
+            // First Get all the AttributeDetails that are already added for the Initiative. 
+            var initiativeAttributeDetails = from initiativeAttributeDetail in context.AttributeDetail
+                                             where initiativeAttributeDetail.InitiativeId == initiative.Id
+                                             select initiativeAttributeDetail;
+
+            // The do an outer-join to see which attributes are not added for the Initiative yet.
+            var initiativeAttribesWithNoDetails =                        
+                     from initiativeAttribute in context.InitiativeAttribute
+                     join attributeDetail in initiativeAttributeDetails
+                                            on initiativeAttribute.Id equals attributeDetail.InitiativeAttributeId
+                                            into attributeDetailsGroup                    
+
+                     from subAttribute in attributeDetailsGroup.DefaultIfEmpty() // Left outer join
+                     where 
+                       subAttribute == null 
+                           //&& subAttribute.InitiativeId == initiative.Id
+                     select initiativeAttribute;
+
+            // Turn it into a list.
+            var missingInitiativeDetails = initiativeAttribesWithNoDetails.ToList();
+
+            // For each of the attributes that aren't added yet for the Initiative - add it.
+            foreach (InitiativeAttribute initiativeAttribute in missingInitiativeDetails)
+            {
+                AttributeDetail attributeDetail = 
+                                new AttributeDetail { 
+                                        InitiativeId = initiative.Id,
+                                        InitiativeAttributeId = initiativeAttribute.Id,
+                                        Detail = ""
+                                    };
+                // Add the instance to the DbSet
+                context.AttributeDetail.Add(attributeDetail);
+
+                // Save changes to the database
+                context.SaveChanges();
+            }
+        }
+
+        Console.WriteLine("Done Updating");
+
+    }
+
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

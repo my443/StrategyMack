@@ -1,0 +1,78 @@
+﻿@page "/attributedetailmultiples/details"
+@using Microsoft.EntityFrameworkCore
+@using StrategyMack.Models
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>AttributeDetailMultiple</h2>
+    <hr />
+    @if (attributedetailmultiple is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">District</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.District</dd>
+            <dt class="col-sm-2">Year</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.Year</dd>
+            <dt class="col-sm-2">JanuaryValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.JanuaryValue</dd>
+            <dt class="col-sm-2">FebruaryValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.FebruaryValue</dd>
+            <dt class="col-sm-2">MarchValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.MarchValue</dd>
+            <dt class="col-sm-2">AprilValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.AprilValue</dd>
+            <dt class="col-sm-2">MayValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.MayValue</dd>
+            <dt class="col-sm-2">JuneValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.JuneValue</dd>
+            <dt class="col-sm-2">JulyValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.JulyValue</dd>
+            <dt class="col-sm-2">AugustValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.AugustValue</dd>
+            <dt class="col-sm-2">SeptemberValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.SeptemberValue</dd>
+            <dt class="col-sm-2">OctoberValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.OctoberValue</dd>
+            <dt class="col-sm-2">NovemberValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.NovemberValue</dd>
+            <dt class="col-sm-2">DecemberValue</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.DecemberValue</dd>
+            <dt class="col-sm-2">Created</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.Created</dd>
+            <dt class="col-sm-2">Modified</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.Modified</dd>
+            <dt class="col-sm-2">InitiativeAttributeId</dt>
+            <dd class="col-sm-10">@attributedetailmultiple.InitiativeAttributeId</dd>
+        </dl>
+        <div>
+            <a href="@($"/attributedetailmultiples/edit?id={attributedetailmultiple.Id}")">Edit</a> |
+            <a href="@($"/attributedetailmultiples")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private AttributeDetailMultiple? attributedetailmultiple;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        attributedetailmultiple = await context.AttributeDetailMultiple.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (attributedetailmultiple is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

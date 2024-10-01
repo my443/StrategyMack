@@ -1,0 +1,51 @@
+﻿@page "/attributedetails/details"
+@using Microsoft.EntityFrameworkCore
+@using StrategyMack.Models
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>AttributeDetail</h2>
+    <hr />
+    @if (attributedetail is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">AttributeId</dt>
+            <dt class="col-sm-2">Detail</dt>
+            <dd class="col-sm-10">@attributedetail.Detail</dd>
+            <dt class="col-sm-2">Created</dt>
+            <dd class="col-sm-10">@attributedetail.Created</dd>
+            <dt class="col-sm-2">Modified</dt>
+            <dd class="col-sm-10">@attributedetail.Modified</dd>
+        </dl>
+        <div>
+            <a href="@($"/attributedetails/edit?id={attributedetail.Id}")">Edit</a> |
+            <a href="@($"/attributedetails")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private AttributeDetail? attributedetail;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        attributedetail = await context.AttributeDetail.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (attributedetail is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

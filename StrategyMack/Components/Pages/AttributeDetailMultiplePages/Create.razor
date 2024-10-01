@@ -1,0 +1,120 @@
+﻿@page "/attributedetailmultiples/create"
+@using Microsoft.EntityFrameworkCore
+@using StrategyMack.Models
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>AttributeDetailMultiple</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="AttributeDetailMultiple" OnValidSubmit="AddAttributeDetailMultiple" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+    
+            <div class="mb-3">
+                <label for="year" class="form-label">Year:</label> 
+                <InputNumber id="year" @bind-Value="AttributeDetailMultiple.Year" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.Year" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="januaryvalue" class="form-label">JanuaryValue:</label> 
+                <InputNumber id="januaryvalue" @bind-Value="AttributeDetailMultiple.JanuaryValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.JanuaryValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="februaryvalue" class="form-label">FebruaryValue:</label> 
+                <InputText id="februaryvalue" @bind-Value="AttributeDetailMultiple.FebruaryValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.FebruaryValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="marchvalue" class="form-label">MarchValue:</label> 
+                <InputText id="marchvalue" @bind-Value="AttributeDetailMultiple.MarchValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.MarchValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="aprilvalue" class="form-label">AprilValue:</label> 
+                <InputText id="aprilvalue" @bind-Value="AttributeDetailMultiple.AprilValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.AprilValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="mayvalue" class="form-label">MayValue:</label> 
+                <InputText id="mayvalue" @bind-Value="AttributeDetailMultiple.MayValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.MayValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="junevalue" class="form-label">JuneValue:</label> 
+                <InputText id="junevalue" @bind-Value="AttributeDetailMultiple.JuneValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.JuneValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="julyvalue" class="form-label">JulyValue:</label> 
+                <InputText id="julyvalue" @bind-Value="AttributeDetailMultiple.JulyValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.JulyValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="augustvalue" class="form-label">AugustValue:</label> 
+                <InputText id="augustvalue" @bind-Value="AttributeDetailMultiple.AugustValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.AugustValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="septembervalue" class="form-label">SeptemberValue:</label> 
+                <InputText id="septembervalue" @bind-Value="AttributeDetailMultiple.SeptemberValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.SeptemberValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="octobervalue" class="form-label">OctoberValue:</label> 
+                <InputText id="octobervalue" @bind-Value="AttributeDetailMultiple.OctoberValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.OctoberValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="novembervalue" class="form-label">NovemberValue:</label> 
+                <InputText id="novembervalue" @bind-Value="AttributeDetailMultiple.NovemberValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.NovemberValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="decembervalue" class="form-label">DecemberValue:</label> 
+                <InputText id="decembervalue" @bind-Value="AttributeDetailMultiple.DecemberValue" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.DecemberValue" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="created" class="form-label">Created:</label> 
+                <InputDate id="created" @bind-Value="AttributeDetailMultiple.Created" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.Created" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="modified" class="form-label">Modified:</label> 
+                <InputDate id="modified" @bind-Value="AttributeDetailMultiple.Modified" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.Modified" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="initiativeattributeid" class="form-label">InitiativeAttributeId:</label> 
+                <InputNumber id="initiativeattributeid" @bind-Value="AttributeDetailMultiple.InitiativeAttributeId" class="form-control" /> 
+                <ValidationMessage For="() => AttributeDetailMultiple.InitiativeAttributeId" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/attributedetailmultiples">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private AttributeDetailMultiple AttributeDetailMultiple { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddAttributeDetailMultiple()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.AttributeDetailMultiple.Add(AttributeDetailMultiple);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/attributedetailmultiples");
+    }
+}

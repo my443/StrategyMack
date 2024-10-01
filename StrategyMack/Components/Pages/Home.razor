@@ -1,0 +1,36 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+<h2>@headingValue</h2>
+
+<p>
+    <button @onclick="UpdateHeading">
+        Update heading
+    </button>
+</p>
+
+<p>
+    <label>
+        <input type="checkbox" @onchange="CheckChanged" />
+        @checkedMessage
+    </label>
+</p>
+
+@code {
+    private string headingValue = "Initial heading";
+    private string checkedMessage = "Not changed yet";
+
+    private void UpdateHeading()
+    {
+        headingValue = $"New heading ({DateTime.Now})";
+    }
+
+    private void CheckChanged()
+    {
+        checkedMessage = $"Last changed at {DateTime.Now}";
+    }
+}

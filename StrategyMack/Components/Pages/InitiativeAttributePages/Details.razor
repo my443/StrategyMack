@@ -1,0 +1,52 @@
+﻿@page "/initiativeattributes/details"
+@using Microsoft.EntityFrameworkCore
+@using StrategyMack.Models
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>InitiativeAttribute</h2>
+    <hr />
+    @if (initiativeattribute is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Title</dt>
+            <dd class="col-sm-10">@initiativeattribute.Title</dd>
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@initiativeattribute.Description</dd>
+            <dt class="col-sm-2">HasMultipleDetails</dt>
+            <dd class="col-sm-10">@initiativeattribute.HasMultipleDetails</dd>
+            <dt class="col-sm-2">IsActive</dt>
+            <dd class="col-sm-10">@initiativeattribute.IsActive</dd>
+        </dl>
+        <div>
+            <a href="@($"/initiativeattributes/edit?id={initiativeattribute.Id}")">Edit</a> |
+            <a href="@($"/initiativeattributes")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private InitiativeAttribute? initiativeattribute;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        initiativeattribute = await context.InitiativeAttribute.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (initiativeattribute is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

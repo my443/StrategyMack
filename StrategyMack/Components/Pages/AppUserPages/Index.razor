@@ -1,0 +1,39 @@
+﻿@page "/appusers"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using StrategyMack.Models
+@using StrategyMack.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="appusers/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.AppUser">
+    <PropertyColumn Property="appuser => appuser.Name" />
+    <PropertyColumn Property="appuser => appuser.Email" />
+    <PropertyColumn Property="appuser => appuser.IsAdmin" />
+    <PropertyColumn Property="appuser => appuser.IsAcive" />
+
+    <TemplateColumn Context="appuser">
+        <a href="@($"appusers/edit?id={appuser.Id}")">Edit</a> |
+        <a href="@($"appusers/details?id={appuser.Id}")">Details</a> |
+        <a href="@($"appusers/delete?id={appuser.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private StrategyMackContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

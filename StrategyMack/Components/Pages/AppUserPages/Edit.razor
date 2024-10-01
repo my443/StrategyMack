@@ -1,0 +1,104 @@
+﻿@page "/appusers/edit"
+@using Microsoft.EntityFrameworkCore
+@using StrategyMack.Models
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>AppUser</h2>
+<hr />
+@if (AppUser is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="AppUser" OnValidSubmit="UpdateAppUser" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="AppUser.Id" value="@AppUser.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="AppUser.Name" class="form-control" />
+                    <ValidationMessage For="() => AppUser.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <InputText id="email" @bind-Value="AppUser.Email" class="form-control" />
+                    <ValidationMessage For="() => AppUser.Email" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="isadmin" class="form-label">IsAdmin:</label>
+                    <InputCheckbox id="isadmin" @bind-Value="AppUser.IsAdmin" class="form-check-input" />
+                    <ValidationMessage For="() => AppUser.IsAdmin" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="isacive" class="form-label">IsAcive:</label>
+                    <InputCheckbox id="isacive" @bind-Value="AppUser.IsAcive" class="form-check-input" />
+                    <ValidationMessage For="() => AppUser.IsAcive" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/appusers">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private AppUser? AppUser { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        AppUser ??= await context.AppUser.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (AppUser is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateAppUser()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(AppUser!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!AppUserExists(AppUser!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/appusers");
+    }
+
+    private bool AppUserExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.AppUser.Any(e => e.Id == id);
+    }
+}

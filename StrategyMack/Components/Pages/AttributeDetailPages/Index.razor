@@ -1,0 +1,38 @@
+﻿@page "/attributedetails"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using StrategyMack.Models
+@using StrategyMack.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<StrategyMack.Data.StrategyMackContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="attributedetails/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.AttributeDetail">
+    <PropertyColumn Property="attributedetail => attributedetail.Detail" />
+    <PropertyColumn Property="attributedetail => attributedetail.Created" />
+    <PropertyColumn Property="attributedetail => attributedetail.Modified" />
+
+    <TemplateColumn Context="attributedetail">
+        <a href="@($"attributedetails/edit?id={attributedetail.Id}")">Edit</a> |
+        <a href="@($"attributedetails/details?id={attributedetail.Id}")">Details</a> |
+        <a href="@($"attributedetails/delete?id={attributedetail.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private StrategyMackContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

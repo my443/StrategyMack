@@ -12,8 +12,8 @@ using StrategyMack.Data;
 namespace StrategyMack.Migrations
 {
     [DbContext(typeof(StrategyMackContext))]
-    [Migration("20240930005756_MigrationOfMoreTables")]
-    partial class MigrationOfMoreTables
+    [Migration("20241001174139_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,9 +60,6 @@ namespace StrategyMack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AttributeId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
@@ -70,18 +67,88 @@ namespace StrategyMack.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("District")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("InitiativeAttributeId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("InitiativeAttributeId")
+                    b.Property<int>("InitiativeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Month")
+                    b.HasKey("Id");
+
+                    b.HasIndex("InitiativeAttributeId");
+
+                    b.ToTable("AttributeDetail");
+                });
+
+            modelBuilder.Entity("StrategyMack.Models.AttributeDetailMultiple", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AprilValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AugustValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DecemberValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("District")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FebruaryValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InitiativeAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("JanuaryValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("JulyValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JuneValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MarchValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MayValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NovemberValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OctoberValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeptemberValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Year")
                         .HasColumnType("int");
@@ -90,7 +157,7 @@ namespace StrategyMack.Migrations
 
                     b.HasIndex("InitiativeAttributeId");
 
-                    b.ToTable("AttributeDetail");
+                    b.ToTable("AttributeDetailMultiple");
                 });
 
             modelBuilder.Entity("StrategyMack.Models.Initiative", b =>
@@ -130,6 +197,9 @@ namespace StrategyMack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AttributeDetailsId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -152,7 +222,20 @@ namespace StrategyMack.Migrations
                 {
                     b.HasOne("StrategyMack.Models.InitiativeAttribute", null)
                         .WithMany("AttributeDetails")
-                        .HasForeignKey("InitiativeAttributeId");
+                        .HasForeignKey("InitiativeAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StrategyMack.Models.AttributeDetailMultiple", b =>
+                {
+                    b.HasOne("StrategyMack.Models.InitiativeAttribute", "InitiativeAttribute")
+                        .WithMany()
+                        .HasForeignKey("InitiativeAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InitiativeAttribute");
                 });
 
             modelBuilder.Entity("StrategyMack.Models.InitiativeAttribute", b =>

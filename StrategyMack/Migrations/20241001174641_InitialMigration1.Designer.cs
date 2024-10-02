@@ -12,8 +12,8 @@ using StrategyMack.Data;
 namespace StrategyMack.Migrations
 {
     [DbContext(typeof(StrategyMackContext))]
-    [Migration("20240930105039_UpdateFK")]
-    partial class UpdateFK
+    [Migration("20241001174641_InitialMigration1")]
+    partial class InitialMigration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,27 +67,88 @@ namespace StrategyMack.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("District")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("InitiativeAttributeId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("InitiativeAttributeId")
+                    b.Property<int>("InitiativeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Month")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InitiativeAttributeId");
 
                     b.ToTable("AttributeDetail");
+                });
+
+            modelBuilder.Entity("StrategyMack.Models.AttributeDetailMultiple", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AprilValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("AugustValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("DecemberValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("District")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("FebruaryValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("FiscalYear")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InitiativeAttributeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InitiativeId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("JanuaryValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("JulyValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("JuneValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("MarchValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("MayValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("NovemberValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("OctoberValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("SeptemberValue")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AttributeDetailMultiple");
                 });
 
             modelBuilder.Entity("StrategyMack.Models.Initiative", b =>
@@ -152,7 +213,9 @@ namespace StrategyMack.Migrations
                 {
                     b.HasOne("StrategyMack.Models.InitiativeAttribute", null)
                         .WithMany("AttributeDetails")
-                        .HasForeignKey("InitiativeAttributeId");
+                        .HasForeignKey("InitiativeAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StrategyMack.Models.InitiativeAttribute", b =>

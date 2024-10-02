@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StrategyMack.Data;
+using System.Configuration;
 
 namespace StrategyMack
 {
@@ -10,8 +11,14 @@ namespace StrategyMack
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            var connectionString = builder.Configuration.GetConnectionString("StrategyMackContext");
+            Console.WriteLine($"Using connection string: {connectionString}");
+
             builder.Services.AddDbContextFactory<StrategyMackContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("StrategyMackContext") ?? throw new InvalidOperationException("Connection string 'StrategyMackContext' not found.")));
+                            options.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'StrategyMackContext' not found.")));
+
+
 
             builder.Services.AddQuickGridEntityFrameworkAdapter();
 
@@ -29,7 +36,7 @@ namespace StrategyMack
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-    app.UseMigrationsEndPoint();
+                app.UseMigrationsEndPoint();
             }
 
             app.UseHttpsRedirection();

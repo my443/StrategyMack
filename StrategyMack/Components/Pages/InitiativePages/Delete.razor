@@ -39,7 +39,7 @@
         </dl>
         <EditForm method="post" Model="initiative" OnValidSubmit="DeleteInitiative" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(initiative is null)">Delete</button> |
-            <a href="/initiatives">Back to List</a>
+            <a href="/">Back to List</a>
         </EditForm>
     }
 </div>
@@ -66,6 +66,6 @@
         using var context = DbFactory.CreateDbContext();
         context.Initiative.Remove(initiative!);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/initiatives");
+        NavigationManager.NavigateTo("/");
     }
 }

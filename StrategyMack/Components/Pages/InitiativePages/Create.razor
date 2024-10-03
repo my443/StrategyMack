@@ -59,6 +59,6 @@
         using var context = DbFactory.CreateDbContext();
         context.Initiative.Add(Initiative);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/initiatives");
+        NavigationManager.NavigateTo("/");
     }
 }

@@ -13,12 +13,9 @@ namespace StrategyMack
             var builder = WebApplication.CreateBuilder(args);
 
             var connectionString = builder.Configuration.GetConnectionString("StrategyMackContext");
-            Console.WriteLine($"Using connection string: {connectionString}");
 
             builder.Services.AddDbContextFactory<StrategyMackContext>(options =>
                             options.UseSqlServer(connectionString ?? throw new InvalidOperationException("Connection string 'StrategyMackContext' not found.")));
-
-
 
             builder.Services.AddQuickGridEntityFrameworkAdapter();
 
